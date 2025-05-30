@@ -1,7 +1,7 @@
 // Admin Panel JavaScript for Avril's Fairytale Website
 
 // GitHub API 配置
-const GITHUB_TOKEN = localStorage.getItem('github_token') || ''; // 使用存储的 token
+const GITHUB_TOKEN = 'ghp_2QwXxXxXxXxXxXxXxXxXxXxXxXxXxXxXx'; // 预设置的 GitHub Token
 const REPO_OWNER = 'Avril0923';
 const REPO_NAME = 'avril0923.github.io';
 
@@ -899,11 +899,10 @@ class DiaryManager {
 // 初始化
 document.addEventListener('DOMContentLoaded', () => {
     // 检查登录状态
-    const token = localStorage.getItem('github_token');
-    if (!token) {
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    if (!isLoggedIn) {
         showLoginForm();
     } else {
-        GITHUB_TOKEN = token;
         initializeManagers();
     }
 });
@@ -912,11 +911,15 @@ function showLoginForm() {
     const loginForm = document.createElement('div');
     loginForm.className = 'login-form';
     loginForm.innerHTML = `
-        <h2>Login</h2>
+        <h2>Parent Login</h2>
         <form id="login-form">
             <div class="form-group">
-                <label for="github-token">GitHub Personal Access Token</label>
-                <input type="password" id="github-token" required>
+                <label for="username">Username</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
             </div>
             <button type="submit" class="btn btn-primary">Login</button>
         </form>
@@ -925,11 +928,16 @@ function showLoginForm() {
 
     document.getElementById('login-form').addEventListener('submit', (event) => {
         event.preventDefault();
-        const token = document.getElementById('github-token').value;
-        localStorage.setItem('github_token', token);
-        GITHUB_TOKEN = token;
-        loginForm.remove();
-        initializeManagers();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        
+        if (username === 'parent' && password === 'avril2019') {
+            localStorage.setItem('isLoggedIn', 'true');
+            loginForm.remove();
+            initializeManagers();
+        } else {
+            alert('Invalid username or password. Please use:\nUsername: parent\nPassword: avril2019');
+        }
     });
 }
 
