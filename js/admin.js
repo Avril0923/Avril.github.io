@@ -24,52 +24,39 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Check if user is logged in
 function checkLoginStatus() {
-    // For demo purposes, show login modal by default
-    // In production, this would check for a valid session
     const loginModal = document.getElementById('login-modal');
-    loginModal.classList.add('active');
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
     
-    // Handle login form submission
-    const loginForm = document.getElementById('login-form');
-    loginForm.addEventListener('submit', function(e) {
-        e.preventDefault();
+    if (!isLoggedIn) {
+        loginModal.classList.add('active');
         
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        
-        // Send login request to API
-        fetch('/api/admin/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ username, password })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                alert('Login failed: ' + data.error);
-            } else {
+        // Handle login form submission
+        const loginForm = document.getElementById('login-form');
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Check credentials
+            if (username === 'parent' && password === 'avril2019') {
+                // Store login status
+                localStorage.setItem('isLoggedIn', 'true');
                 // Hide login modal and load admin panel
                 loginModal.classList.remove('active');
                 loadAllSections();
+            } else {
+                alert('Invalid username or password. Please use:\nUsername: parent\nPassword: avril2019');
             }
-        })
-        .catch(error => {
-            console.error('Login error:', error);
-            alert('Login failed. Please try again.');
         });
-    });
+    } else {
+        loadAllSections();
+    }
     
     // Handle logout
     document.getElementById('logout-btn').addEventListener('click', function() {
-        fetch('/api/admin/logout', {
-            method: 'POST'
-        })
-        .then(() => {
-            // Redirect to home page
-            window.location.href = '/';
-        });
+        localStorage.removeItem('isLoggedIn');
+        window.location.href = '/';
     });
 }
 
