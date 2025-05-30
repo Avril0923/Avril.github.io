@@ -1,5 +1,10 @@
 // Admin Panel JavaScript for Avril's Fairytale Website
 
+// GitHub API 配置
+const GITHUB_TOKEN = localStorage.getItem('github_token') || ''; // 使用存储的 token
+const REPO_OWNER = 'Avril0923';
+const REPO_NAME = 'avril0923.github.io';
+
 document.addEventListener('DOMContentLoaded', function() {
     // Check login status
     checkLoginStatus();
@@ -685,4 +690,266 @@ function populateThemeFilter(diaryEntries) {
             });
         }
     });
+}
+
+// 工具函数
+function showMessage(message, type = 'info') {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${type}`;
+    messageDiv.textContent = message;
+    document.body.appendChild(messageDiv);
+    setTimeout(() => messageDiv.remove(), 3000);
+}
+
+// 文件上传处理
+async function uploadFile(file, path) {
+    try {
+        const content = await readFileAsBase64(file);
+        const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message: `Upload ${file.name}`,
+                content: content.split(',')[1]
+            })
+        });
+        
+        if (!response.ok) throw new Error('Upload failed');
+        return await response.json();
+    } catch (error) {
+        console.error('Upload error:', error);
+        showMessage('Failed to upload file', 'error');
+        throw error;
+    }
+}
+
+// 读取文件为 Base64
+function readFileAsBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+// 照片管理
+class PhotoManager {
+    constructor() {
+        this.form = document.getElementById('photo-form');
+        this.gallery = document.getElementById('admin-photo-gallery');
+        this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+        this.form.addEventListener('submit', this.handleSubmit.bind(this));
+        document.getElementById('photo-file').addEventListener('change', this.handleFileSelect.bind(this));
+    }
+
+    async handleSubmit(event) {
+        event.preventDefault();
+        const formData = new FormData(this.form);
+        const file = formData.get('photo-file');
+        
+        try {
+            // 上传图片
+            const uploadResult = await uploadFile(file, `img/photos/${file.name}`);
+            
+            // 创建 Issue 存储照片信息
+            const photoData = {
+                title: formData.get('photo-title'),
+                description: formData.get('photo-description'),
+                date: formData.get('photo-date'),
+                featured: formData.get('photo-featured') === 'on',
+                imageUrl: uploadResult.content.download_url
+            };
+
+            await this.createPhotoIssue(photoData);
+            showMessage('Photo uploaded successfully!');
+            this.form.reset();
+            this.loadPhotos();
+        } catch (error) {
+            showMessage('Failed to upload photo', 'error');
+        }
+    }
+
+    async createPhotoIssue(photoData) {
+        const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                title: `Photo: ${photoData.title}`,
+                body: JSON.stringify(photoData),
+                labels: ['photo']
+            })
+        });
+
+        if (!response.ok) throw new Error('Failed to create photo issue');
+        return await response.json();
+    }
+
+    async loadPhotos() {
+        try {
+            const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues?labels=photo`);
+            const photos = await response.json();
+            
+            this.gallery.innerHTML = photos.map(photo => {
+                const data = JSON.parse(photo.body);
+                return `
+                    <div class="photo-item">
+                        <img src="${data.imageUrl}" alt="${data.title}">
+                        <div class="photo-info">
+                            <h4>${data.title}</h4>
+                            <p>${data.description}</p>
+                            <span class="date">${data.date}</span>
+                            <div class="photo-actions">
+                                <button onclick="photoManager.editPhoto(${photo.number})">Edit</button>
+                                <button onclick="photoManager.deletePhoto(${photo.number})">Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        } catch (error) {
+            showMessage('Failed to load photos', 'error');
+        }
+    }
+
+    async editPhoto(issueNumber) {
+        // 实现编辑功能
+    }
+
+    async deletePhoto(issueNumber) {
+        // 实现删除功能
+    }
+}
+
+// 日记管理
+class DiaryManager {
+    constructor() {
+        this.form = document.getElementById('diary-form');
+        this.list = document.getElementById('admin-diary-list');
+        this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+        this.form.addEventListener('submit', this.handleSubmit.bind(this));
+    }
+
+    async handleSubmit(event) {
+        event.preventDefault();
+        const formData = new FormData(this.form);
+        
+        try {
+            const diaryData = {
+                title: formData.get('diary-title'),
+                content: formData.get('diary-content'),
+                date: formData.get('diary-date'),
+                mood: formData.get('diary-mood')
+            };
+
+            await this.createDiaryIssue(diaryData);
+            showMessage('Diary entry created successfully!');
+            this.form.reset();
+            this.loadDiaryEntries();
+        } catch (error) {
+            showMessage('Failed to create diary entry', 'error');
+        }
+    }
+
+    async createDiaryIssue(diaryData) {
+        const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                title: `Diary: ${diaryData.title}`,
+                body: JSON.stringify(diaryData),
+                labels: ['diary']
+            })
+        });
+
+        if (!response.ok) throw new Error('Failed to create diary issue');
+        return await response.json();
+    }
+
+    async loadDiaryEntries() {
+        try {
+            const response = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/issues?labels=diary`);
+            const entries = await response.json();
+            
+            this.list.innerHTML = entries.map(entry => {
+                const data = JSON.parse(entry.body);
+                return `
+                    <div class="diary-item">
+                        <h4>${data.title}</h4>
+                        <p>${data.content}</p>
+                        <div class="diary-meta">
+                            <span class="date">${data.date}</span>
+                            <span class="mood">${data.mood}</span>
+                        </div>
+                        <div class="diary-actions">
+                            <button onclick="diaryManager.editEntry(${entry.number})">Edit</button>
+                            <button onclick="diaryManager.deleteEntry(${entry.number})">Delete</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        } catch (error) {
+            showMessage('Failed to load diary entries', 'error');
+        }
+    }
+}
+
+// 初始化
+document.addEventListener('DOMContentLoaded', () => {
+    // 检查登录状态
+    const token = localStorage.getItem('github_token');
+    if (!token) {
+        showLoginForm();
+    } else {
+        GITHUB_TOKEN = token;
+        initializeManagers();
+    }
+});
+
+function showLoginForm() {
+    const loginForm = document.createElement('div');
+    loginForm.className = 'login-form';
+    loginForm.innerHTML = `
+        <h2>Login</h2>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="github-token">GitHub Personal Access Token</label>
+                <input type="password" id="github-token" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    `;
+    document.body.appendChild(loginForm);
+
+    document.getElementById('login-form').addEventListener('submit', (event) => {
+        event.preventDefault();
+        const token = document.getElementById('github-token').value;
+        localStorage.setItem('github_token', token);
+        GITHUB_TOKEN = token;
+        loginForm.remove();
+        initializeManagers();
+    });
+}
+
+function initializeManagers() {
+    window.photoManager = new PhotoManager();
+    window.diaryManager = new DiaryManager();
+    // 加载初始数据
+    photoManager.loadPhotos();
+    diaryManager.loadDiaryEntries();
 }
