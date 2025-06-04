@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photos - Avril's Fairytale World</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/photos.css">
+</head>
+<body>
+    <div class="fairy-cursor"></div>
+    
+    <header>
+        <div class="header-content">
+            <h1>Avril's Fairytale World</h1>
+            <nav>
+                <ul>
+                    <li><a href="/" class="nav-link">Home</a></li>
+                    <li><a href="/photos" class="nav-link active">Photos</a></li>
+                    <li><a href="/artwork" class="nav-link">Artwork</a></li>
+                    <li><a href="/awards" class="nav-link">Awards</a></li>
+                    <li><a href="/diary" class="nav-link">Diary</a></li>
+                    <li><a href="/admin" class="nav-link admin-link">Parent Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        <section class="page-header">
+            <h2>Avril's Photo Gallery</h2>
+            <p>A chronological journey through Avril's magical moments</p>
+        </section>
+        
+        <section class="timeline-navigation">
+            <div class="year-selector">
+                <button class="year-btn active" data-year="all">All Photos</button>
+                <!-- Years will be added dynamically -->
+            </div>
+        </section>
+        
+        <section class="photo-gallery">
+            <div class="gallery-container">
+                <!-- Photos will be loaded dynamically -->
+                <p class="loading-message">Loading Avril's magical moments...</p>
+            </div>
+        </section>
+        
+        <!-- Lightbox for photo viewing -->
+        <div class="lightbox" id="photo-lightbox">
+            <div class="lightbox-content">
+                <button class="lightbox-close">&times;</button>
+                <button class="lightbox-prev">❮</button>
+                <button class="lightbox-next">❯</button>
+                <div class="lightbox-image-container">
+                    <img src="" alt="" class="lightbox-image">
+                </div>
+                <div class="lightbox-caption">
+                    <h3 class="lightbox-title"></h3>
+                    <p class="lightbox-description"></p>
+                    <span class="lightbox-date"></span>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-castle"></div>
+            <div class="footer-links">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/photos">Photos</a></li>
+                    <li><a href="/artwork">Artwork</a></li>
+                    <li><a href="/awards">Awards</a></li>
+                    <li><a href="/diary">Diary</a></li>
+                </ul>
+            </div>
+            <div class="footer-credit">
+                <p>Created with love for Avril</p>
+                <p>&copy; 2025 Avril's Fairytale World</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/photos.js"></script>
+</body>
+</html>

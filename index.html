@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avril's Fairytale World</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/main.css">
+</head>
+<body>
+    <div class="fairy-cursor"></div>
+    
+    <header>
+        <div class="header-content">
+            <h1>Avril's Fairytale World</h1>
+            <nav>
+                <ul>
+                    <li><a href="./index.html" class="nav-link active">Home</a></li>
+                    <li><a href="./photos.html" class="nav-link">Photos</a></li>
+                    <li><a href="./artwork.html" class="nav-link">Artwork</a></li>
+                    <li><a href="./awards.html" class="nav-link">Awards</a></li>
+                    <li><a href="./diary.html" class="nav-link">Diary</a></li>
+                    <li><a href="./admin.html" class="nav-link admin-link">Parent Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        <section class="hero">
+            <div class="carousel">
+                <div class="carousel-container">
+                    <!-- Carousel images will be loaded dynamically -->
+                    <div class="carousel-slide active">
+                        <img src="./img/castle-silhouette.png" alt="Avril's photo">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="./img/fairy-bg.png" alt="Avril's photo">
+                    </div>
+                    <div class="carousel-slide">
+                        <img src="./img/photos-icon.png" alt="Avril's photo">
+                    </div>
+                </div>
+                <button class="carousel-button prev">❮</button>
+                <button class="carousel-button next">❯</button>
+            </div>
+            <div class="welcome-message">
+                <h2>Welcome to Avril's Magical World</h2>
+                <p>Join us on a journey through Avril's adventures, creations, and achievements!</p>
+            </div>
+        </section>
+        
+        <section class="quick-access">
+            <div class="card">
+                <div class="card-image">
+                    <img src="./img/photos-icon.png" alt="Photos">
+                </div>
+                <h3>Photos</h3>
+                <p>Explore Avril's photo gallery</p>
+                <a href="./photos.html" class="card-button">View Photos</a>
+            </div>
+            
+            <div class="card">
+                <div class="card-image">
+                    <img src="./img/artwork-icon.png" alt="Artwork">
+                </div>
+                <h3>Artwork</h3>
+                <p>Discover Avril's creative masterpieces</p>
+                <a href="./artwork.html" class="card-button">View Artwork</a>
+            </div>
+            
+            <div class="card">
+                <div class="card-image">
+                    <img src="./img/awards-icon.png" alt="Awards">
+                </div>
+                <h3>Awards</h3>
+                <p>Celebrate Avril's achievements</p>
+                <a href="./awards.html" class="card-button">View Awards</a>
+            </div>
+            
+            <div class="card">
+                <div class="card-image">
+                    <img src="./img/diary-icon.png" alt="Diary">
+                </div>
+                <h3>Diary</h3>
+                <p>Read about Avril's growth journey</p>
+                <a href="./diary.html" class="card-button">View Diary</a>
+            </div>
+        </section>
+        
+        <section class="latest-updates">
+            <h2>Latest Updates</h2>
+            <div class="updates-container">
+                <!-- Latest updates will be loaded dynamically -->
+                <div class="update-card">
+                    <div class="update-image">
+                        <img src="./img/artwork-icon.png" alt="Latest update">
+                    </div>
+                    <div class="update-content">
+                        <h3>New Artwork Added</h3>
+                        <p>Avril created a beautiful painting of a fairy castle!</p>
+                        <span class="update-date">May 25, 2025</span>
+                    </div>
+                </div>
+                
+                <div class="update-card">
+                    <div class="update-image">
+                        <img src="./img/photos-icon.png" alt="Latest update">
+                    </div>
+                    <div class="update-content">
+                        <h3>Birthday Celebration</h3>
+                        <p>Check out photos from Avril's 5th birthday party!</p>
+                        <span class="update-date">May 10, 2025</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-castle"></div>
+            <div class="footer-links">
+                <ul>
+                    <li><a href="./index.html">Home</a></li>
+                    <li><a href="./photos.html">Photos</a></li>
+                    <li><a href="./artwork.html">Artwork</a></li>
+                    <li><a href="./awards.html">Awards</a></li>
+                    <li><a href="./diary.html">Diary</a></li>
+                </ul>
+            </div>
+            <div class="footer-credit">
+                <p>Created with love for Avril</p>
+                <p>&copy; 2025 Avril's Fairytale World</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="./js/main.js"></script>
+    <script type="module">
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-analytics.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyBUyoDPHVOy22l-LtypZt3w8SR5jmw046I",
+        authDomain: "avril-0923.firebaseapp.com",
+        projectId: "avril-0923",
+        storageBucket: "avril-0923.appspot.com",
+        messagingSenderId: "218724335847",
+        appId: "1:218724335847:web:958eda2a565a8ff9dfa242",
+        measurementId: "G-F896KBK8M7"
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+    </script>
+</body>
+</html>
